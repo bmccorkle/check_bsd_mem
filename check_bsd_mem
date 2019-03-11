@@ -236,14 +236,18 @@ fi
 
 if [ $CRIT_THRESHOLD ] && [ $( echo $CRIT_THRESHOLD | LC_ALL=C grep '%$' ) ] ; then
         crit_percent=$(echo "$CRIT_THRESHOLD" | tr -d "%")
+	crit_used=$(printf '%.0f' $(echo "scale=3; ${crit_percent} /100 * ${perf_memory_available}" | bc -l))
 elif [ $CRIT_THRESHOLD ] ; then
         crit_used=$(( $CRIT_THRESHOLD * 1048576 ))
+	crit_percent=$(printf '%.1f' $(echo "scale=3; ${crit_used} / ${perf_memory_available} * 100" | bc -l))
 fi
 
 if [ $WARN_THRESHOLD ] && [ $( echo $WARN_THRESHOLD | LC_ALL=C grep '%$' ) ] ; then
         warn_percent=$(echo "$WARN_THRESHOLD" | tr -d "%")
+	warn_used=$(printf '%.0f' $(echo "scale=3; ${warn_percent} /100 * ${perf_memory_available}" | bc -l))
 elif [ $WARN_THRESHOLD ] ; then
         warn_used=$(( $WARN_THRESHOLD * 1048576 ))
+	warn_percent=$(printf '%.1f' $(echo "scale=3; ${warn_used} / ${perf_memory_available} * 100" | bc -l))
 fi
 
 
