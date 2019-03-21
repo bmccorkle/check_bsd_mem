@@ -231,28 +231,6 @@ fi
 
 
 #####
-#CONVERT WARN/CRIT USED TO BYTES OR DETERMINE IF PERCENT
-#####
-
-if [ $CRIT_THRESHOLD ] && [ $( echo $CRIT_THRESHOLD | LC_ALL=C grep '%$' ) ] ; then
-        crit_percent=$(echo "$CRIT_THRESHOLD" | tr -d "%")
-	crit_used=$(printf '%.0f' $(echo "scale=3; ${crit_percent} /100 * ${perf_memory_available}" | bc -l))
-elif [ $CRIT_THRESHOLD ] ; then
-        crit_used=$(( $CRIT_THRESHOLD * 1048576 ))
-	crit_percent=$(printf '%.1f' $(echo "scale=3; ${crit_used} / ${perf_memory_available} * 100" | bc -l))
-fi
-
-if [ $WARN_THRESHOLD ] && [ $( echo $WARN_THRESHOLD | LC_ALL=C grep '%$' ) ] ; then
-        warn_percent=$(echo "$WARN_THRESHOLD" | tr -d "%")
-	warn_used=$(printf '%.0f' $(echo "scale=3; ${warn_percent} /100 * ${perf_memory_available}" | bc -l))
-elif [ $WARN_THRESHOLD ] ; then
-        warn_used=$(( $WARN_THRESHOLD * 1048576 ))
-	warn_percent=$(printf '%.1f' $(echo "scale=3; ${warn_used} / ${perf_memory_available} * 100" | bc -l))
-fi
-
-
-
-#####
 #CALC MEMORY STATISTICS
 #####
 
@@ -277,6 +255,27 @@ percent_memory_used=$(printf '%.1f' $(echo "scale=3; ${perf_memory_used} * 100 /
 
 ## Physically Installed Memory (Always return GB or Higher)
 scaled_ram_installed=$(( ram_installed / ram_scale ))
+
+
+
+#####
+#CONVERT WARN/CRIT USED TO BYTES OR DETERMINE IF PERCENT
+#####
+
+if [ $CRIT_THRESHOLD ] && [ $( echo $CRIT_THRESHOLD | LC_ALL=C grep '%$' ) ] ; then
+        crit_percent=$(echo "$CRIT_THRESHOLD" | tr -d "%")
+	crit_used=$(printf '%.0f' $(echo "scale=3; ${crit_percent} /100 * ${perf_memory_available}" | bc -l))
+elif [ $CRIT_THRESHOLD ] ; then
+        crit_used=$(( $CRIT_THRESHOLD * 1048576 ))
+	crit_percent=$(printf '%.1f' $(echo "scale=3; ${crit_used} / ${perf_memory_available} * 100" | bc -l))
+fi
+if [ $WARN_THRESHOLD ] && [ $( echo $WARN_THRESHOLD | LC_ALL=C grep '%$' ) ] ; then
+        warn_percent=$(echo "$WARN_THRESHOLD" | tr -d "%")
+	warn_used=$(printf '%.0f' $(echo "scale=3; ${warn_percent} /100 * ${perf_memory_available}" | bc -l))
+elif [ $WARN_THRESHOLD ] ; then
+        warn_used=$(( $WARN_THRESHOLD * 1048576 ))
+        warn_percent=$(printf '%.1f' $(echo "scale=3; ${warn_used} / ${perf_memory_available} * 100" | bc -l))
+fi
 
 
 
@@ -401,38 +400,12 @@ fi
 
 
 
-#DEBUG
-#echo "******************"
-#echo "Page Size:     $page_size"
-#echo "Page Cnt:      $page_cnt"
-#echo "Active Cnt:    $active_cnt"
-#echo "Inactive Cnt:  $inactive_cnt"
-#echo "Cache Cnt:     $cache_cnt"
-#echo "Free Cnt:      $free_cnt"
-#echo "Wired Cnt:     $wired_cnt"
-#echo "UNITS:         $UNITS"
-#echo "RAM UNITS:     $RAM_UNITS
-#echo "SCALE:         $scale"
-#echo "---------------"
-#echo "INSTALLED MEMORY: ${ram_installed} ${UNITS}"
-#echo "AVAIL MEM:        ${scaled_memory_available} ${UNITS}"
-#echo "FREE MEMORY:      ${scaled_memory_free} ${UNITS}"
-#echo "USED MEMORY:      ${scaled_memory_used} ${UNITS}"
-#echo "ACTIVE MEMORY:    ${scaled_memory_active} ${UNITS}"
-#echo "INACTIVE MEMORY:  ${scaled_memory_inactive} ${UNITS}"
-#echo "WIRED MEMORY:     ${scaled_memory_wired} ${UNITS}"
-#echo "CACHED MEMORY:    ${scaled_memory_cached} ${UNITS}"
-#echo "% Used MEMORY:    ${percent_memory_used}%"
-#echo "******************"
-
-
-
 #####
 #RETURN MEMORY MSG/STATUS AND EXIT  
 #####
 
 if ( [ $crit_used ] && [ $perf_memory_used -gt $crit_used ] ) || ( [ $crit_percent ] && [ $(echo "$percent_memory_used > $crit_percent" | bc) -eq 1 ] ) ; then
-	      printf '%b' "CRITICAL: $RETURN_MSG | $PERF_DATA"
+	printf '%b' "CRITICAL: $RETURN_MSG | $PERF_DATA"
         printf '%b' "$RETURN_MSG_2A"
         printf '%10.10s' "$RETURN_MSG_2B"
         printf '%b' "$RETURN_MSG_3A"
@@ -443,9 +416,9 @@ if ( [ $crit_used ] && [ $perf_memory_used -gt $crit_used ] ) || ( [ $crit_perce
         printf '%10.10s' "$RETURN_MSG_5B"
         printf '%b' "$RETURN_MSG_6A"
         printf '%10.10s' "$RETURN_MSG_6B"
-	      exit $STATE_CRITICAL
+	exit $STATE_CRITICAL
 elif ( [ $warn_used ] && [ $perf_memory_used -gt $warn_used ] ) || ( [ $warn_percent ] && [ $(echo "$percent_memory_used > $warn_percent" | bc) -eq 1 ] ) ; then
-	      printf '%b' "WARNING: $RETURN_MSG | $PERF_DATA"
+	printf '%b' "WARNING: $RETURN_MSG | $PERF_DATA"
         printf '%b' "$RETURN_MSG_2A"
         printf '%10.10s' "$RETURN_MSG_2B"
         printf '%b' "$RETURN_MSG_3A"
@@ -456,9 +429,9 @@ elif ( [ $warn_used ] && [ $perf_memory_used -gt $warn_used ] ) || ( [ $warn_per
         printf '%10.10s' "$RETURN_MSG_5B"
         printf '%b' "$RETURN_MSG_6A"
         printf '%10.10s' "$RETURN_MSG_6B"
-	      exit $STATE_WARNING
+	exit $STATE_WARNING
 else
-	      printf '%b' "$RETURN_MSG | $PERF_DATA"
+	printf '%b' "$RETURN_MSG | $PERF_DATA"
         printf '%b' "$RETURN_MSG_2A"
         printf '%10.10s' "$RETURN_MSG_2B"
         printf '%b' "$RETURN_MSG_3A"
@@ -467,7 +440,7 @@ else
         printf '%10.10s' "$RETURN_MSG_4B"
         printf '%b' "$RETURN_MSG_5A"
         printf '%10.10s' "$RETURN_MSG_5B"
-	      printf '%b' "$RETURN_MSG_6A"
-        printf '%10.10s' "$RETURN_MSG_6B"
-	      exit $STATE_OK
+	printf '%b' "$RETURN_MSG_6A"
+	printf '%10.10s' "$RETURN_MSG_6B"
+	exit $STATE_OK
 fi
