@@ -1,13 +1,14 @@
 #!/bin/sh
 ##################
-# February 25st, 2019
-# Version 1.1
+# Created: February 25st, 2019
+# Version: 1.2
 # Author:  Brandon McCorkle
-# Purpose:  Checks the memory on a FreeBSD System
+# Purpose: Checks the memory on a FreeBSD System
 # Changelog:
-#	* 2/25/19 - Initial Release
+#	* 2/25/2019 - Initial Release
+#	* 3/02/2021 - Fix divide error on memory size when under 1GB
 ##############################
-VERSION="check_mem v1.1 by Brandon McCorkle for FreeBSD"
+VERSION="check_mem v1.2 by Brandon McCorkle for FreeBSD"
 
 # Copyright (c) 2019, Brandon McCorkle <brandon.mccorkle@gmail.com>
 # All rights reserved.
@@ -254,7 +255,7 @@ scaled_memory_available=$(echo "scale=3; $perf_memory_available / $scale" | bc -
 percent_memory_used=$(printf '%.1f' $(echo "scale=3; ${perf_memory_used} * 100 / ${perf_memory_available}" | bc -l))
 
 ## Physically Installed Memory (Always return GB or Higher)
-scaled_ram_installed=$(( ram_installed / ram_scale ))
+scaled_ram_installed=$(echo "scale=3; $ram_installed / $ram_scale" | bc -l)
 
 
 
