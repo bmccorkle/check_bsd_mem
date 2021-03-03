@@ -255,7 +255,7 @@ scaled_memory_available=$(echo "scale=3; $perf_memory_available / $scale" | bc -
 percent_memory_used=$(printf '%.1f' $(echo "scale=3; ${perf_memory_used} * 100 / ${perf_memory_available}" | bc -l))
 
 ## Physically Installed Memory (Always return GB or Higher)
-scaled_ram_installed=$(echo "scale=3; $ram_installed / $ram_scale" | bc -l)
+scaled_ram_installed=$(echo "scale=3; $ram_installed / $ram_scale" | bc -l | awk ' sub("\\.*0+$","") ')
 
 
 
