@@ -1,1 +1,347 @@
-
+{
+  "aliasColors": {},
+  "dashLength": 10,
+  "description": "Detailed Memory Breakdown (FreeBSD Only)",
+  "fieldConfig": {
+    "defaults": {
+      "custom": {}
+    },
+    "overrides": []
+  },
+  "gridPos": {
+    "h": 9,
+    "w": 12,
+    "x": 0,
+    "y": 21
+  },
+  "id": 12,
+  "legend": {
+    "alignAsTable": true,
+    "avg": true,
+    "current": true,
+    "hideEmpty": true,
+    "hideZero": true,
+    "max": true,
+    "min": true,
+    "rightSide": false,
+    "show": true,
+    "total": false,
+    "values": true
+  },
+  "lines": true,
+  "linewidth": 1,
+  "links": [
+    {
+      "targetBlank": true,
+      "title": "Open Graphing",
+      "url": "https://URL.DOMAIN.COM/freebsd?orgId=1&var-hostname=${hostname}"
+    }
+  ],
+  "nullPointMode": "connected",
+  "options": {
+    "alertThreshold": true
+  },
+  "pluginVersion": "7.2.0",
+  "pointradius": 5,
+  "renderer": "flot",
+  "seriesOverrides": [
+    {
+      "alias": "Active",
+      "lines": true,
+      "linewidth": 2,
+      "yaxis": 1
+    },
+    {
+      "alias": "Inactive",
+      "lines": true,
+      "linewidth": 2,
+      "yaxis": 1
+    },
+    {
+      "alias": "Wired",
+      "lines": true,
+      "linewidth": 2,
+      "yaxis": 1
+    }
+  ],
+  "spaceLength": 10,
+  "targets": [
+    {
+      "alias": "Active",
+      "groupBy": [
+        {
+          "params": [
+            "$__interval"
+          ],
+          "type": "time"
+        }
+      ],
+      "measurement": "NRPEv3",
+      "orderByTime": "ASC",
+      "policy": "default",
+      "refId": "A",
+      "resultFormat": "time_series",
+      "select": [
+        [
+          {
+            "params": [
+              "value"
+            ],
+            "type": "field"
+          },
+          {
+            "params": [],
+            "type": "max"
+          }
+        ]
+      ],
+      "tags": [
+        {
+          "key": "hostname",
+          "operator": "=~",
+          "value": "/^$hostname$/"
+        },
+        {
+          "condition": "AND",
+          "key": "metric",
+          "operator": "=",
+          "value": "active"
+        }
+      ]
+    },
+    {
+      "alias": "Inactive",
+      "groupBy": [
+        {
+          "params": [
+            "$__interval"
+          ],
+          "type": "time"
+        }
+      ],
+      "measurement": "NRPEv3",
+      "orderByTime": "ASC",
+      "policy": "default",
+      "refId": "B",
+      "resultFormat": "time_series",
+      "select": [
+        [
+          {
+            "params": [
+              "value"
+            ],
+            "type": "field"
+          },
+          {
+            "params": [],
+            "type": "mean"
+          }
+        ]
+      ],
+      "tags": [
+        {
+          "key": "hostname",
+          "operator": "=~",
+          "value": "/^$hostname$/"
+        },
+        {
+          "condition": "AND",
+          "key": "metric",
+          "operator": "=",
+          "value": "inactive"
+        }
+      ]
+    },
+    {
+      "alias": "Wired",
+      "groupBy": [
+        {
+          "params": [
+            "$__interval"
+          ],
+          "type": "time"
+        }
+      ],
+      "measurement": "NRPEv3",
+      "orderByTime": "ASC",
+      "policy": "default",
+      "refId": "C",
+      "resultFormat": "time_series",
+      "select": [
+        [
+          {
+            "params": [
+              "value"
+            ],
+            "type": "field"
+          },
+          {
+            "params": [],
+            "type": "max"
+          }
+        ]
+      ],
+      "tags": [
+        {
+          "key": "hostname",
+          "operator": "=~",
+          "value": "/^$hostname$/"
+        },
+        {
+          "condition": "AND",
+          "key": "metric",
+          "operator": "=",
+          "value": "wired"
+        }
+      ]
+    },
+    {
+      "alias": "Free",
+      "groupBy": [
+        {
+          "params": [
+            "$__interval"
+          ],
+          "type": "time"
+        },
+        {
+          "params": [
+            "null"
+          ],
+          "type": "fill"
+        }
+      ],
+      "measurement": "NRPEv3",
+      "orderByTime": "ASC",
+      "policy": "default",
+      "refId": "D",
+      "resultFormat": "time_series",
+      "select": [
+        [
+          {
+            "params": [
+              "value"
+            ],
+            "type": "field"
+          },
+          {
+            "params": [],
+            "type": "mean"
+          }
+        ]
+      ],
+      "tags": [
+        {
+          "key": "hostname",
+          "operator": "=~",
+          "value": "/^$hostname$/"
+        },
+        {
+          "condition": "AND",
+          "key": "metric",
+          "operator": "=",
+          "value": "free2BSD"
+        }
+      ]
+    },
+    {
+      "alias": "Cached",
+      "groupBy": [
+        {
+          "params": [
+            "$__interval"
+          ],
+          "type": "time"
+        },
+        {
+          "params": [
+            "null"
+          ],
+          "type": "fill"
+        }
+      ],
+      "measurement": "NRPEv3",
+      "orderByTime": "ASC",
+      "policy": "default",
+      "refId": "E",
+      "resultFormat": "time_series",
+      "select": [
+        [
+          {
+            "params": [
+              "value"
+            ],
+            "type": "field"
+          },
+          {
+            "params": [],
+            "type": "mean"
+          }
+        ]
+      ],
+      "tags": [
+        {
+          "key": "hostname",
+          "operator": "=~",
+          "value": "/^$hostname$/"
+        },
+        {
+          "condition": "AND",
+          "key": "metric",
+          "operator": "=",
+          "value": "cached"
+        }
+      ]
+    }
+  ],
+  "thresholds": [],
+  "timeRegions": [],
+  "title": "Memory - Physical Breakdown",
+  "tooltip": {
+    "shared": true,
+    "sort": 0,
+    "value_type": "individual"
+  },
+  "type": "graph",
+  "xaxis": {
+    "buckets": null,
+    "mode": "time",
+    "name": null,
+    "show": true,
+    "values": []
+  },
+  "yaxes": [
+    {
+      "format": "decbytes",
+      "label": null,
+      "logBase": 1,
+      "max": null,
+      "min": null,
+      "show": true
+    },
+    {
+      "format": "short",
+      "label": null,
+      "logBase": 1,
+      "max": null,
+      "min": null,
+      "show": true
+    }
+  ],
+  "yaxis": {
+    "align": false,
+    "alignLevel": null
+  },
+  "bars": false,
+  "dashes": false,
+  "fill": 0,
+  "fillGradient": 0,
+  "hiddenSeries": false,
+  "percentage": false,
+  "points": false,
+  "stack": false,
+  "steppedLine": false,
+  "timeFrom": null,
+  "timeShift": null,
+  "datasource": null
+}
