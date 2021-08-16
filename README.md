@@ -1,5 +1,5 @@
 # check_bsd_mem
-Monitoring Plugin to check Memory Usage on a FreeBSD Server
+Monitoring Plugin to check Memory Usage on a FreeBSD Server 
 
 This script checks memory usage and optionally verifies if the used memory
 is ABOVE defined threshhold from Avail Memory (See DEFINITIONs)
